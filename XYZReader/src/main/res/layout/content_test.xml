@@ -74,7 +74,5 @@
                 android:textColorLink="@color/colorAccent"
                 android:textSize="@dimen/detail_body_text_size" />
         </LinearLayout>
-
-
     </LinearLayout>
 </ScrollView>

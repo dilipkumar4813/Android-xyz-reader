@@ -1,6 +1,7 @@
 package com.example.xyzreader.data;
 
 import android.net.Uri;
+import android.util.Log;
 
 public class ItemsContract {
 	public static final String CONTENT_AUTHORITY = "com.example.xyzreader";
@@ -40,6 +41,7 @@ public class ItemsContract {
 
 		/** Matches: /items/[_id]/ */
 		public static Uri buildItemUri(long _id) {
+			Log.d("shit",""+BASE_URI.buildUpon().appendPath("items").appendPath(Long.toString(_id)).build());
 			return BASE_URI.buildUpon().appendPath("items").appendPath(Long.toString(_id)).build();
 		}
 

@@ -12,14 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
-import android.text.method.LinkMovementMethod;
-import android.transition.Explode;
 import android.transition.Slide;
-import android.transition.Transition;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,22 +36,30 @@ public class ArticleDetailActivity extends AppCompatActivity
     private Cursor mCursor;
     private long mStartId;
 
-    private long mSelectedItemId;
     ImageView mToolbarImage;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     private SimpleDateFormat outputFormat = new SimpleDateFormat();
     private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2, 1, 1);
-    TextView bodyText;
+
+    String bodyData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
+        TextView titleView = (TextView) findViewById(R.id.article_title);
+        mToolbarImage = (ImageView) findViewById(R.id.iv_recipe_image);
+
+        if (savedInstanceState == null) {
+            if (getIntent().getExtras() != null) {
+                mStartId = getIntent().getLongExtra(ArticleListActivity.ITEM_ID, 0);
+                titleView.setText(getIntent().getStringExtra("title"));
+            }
+        }
+
         getLoaderManager().initLoader(0, null, this);
-        bodyText = (TextView) findViewById(R.id.article_body);
-        bodyText.setVisibility(View.VISIBLE);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Slide slide = new Slide(Gravity.END);
@@ -68,8 +72,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mToolbarImage = (ImageView) findViewById(R.id.iv_recipe_image);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,32 +83,24 @@ public class ArticleDetailActivity extends AppCompatActivity
             }
         });
 
-        if (savedInstanceState == null) {
-            if (getIntent() != null && getIntent().getExtras() != null) {
-                mStartId = getIntent().getExtras().getLong(ArticleListActivity.ITEM_ID);
-                Log.d("selected item", "" + mStartId);
-                mSelectedItemId = mStartId;
+        final TextView bodyView = (TextView) findViewById(R.id.article_body);
+        bodyView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                bodyView.setText(bodyData);
             }
-        }
+        }, 700);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return ArticleLoader.newAllArticlesInstance(this);
+        return ArticleLoader.newInstanceForItemId(this, mStartId);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        /*if (!isAdded()) {
-            if (cursor != null) {
-                cursor.close();
-            }
-            return;
-        }*/
-
         mCursor = cursor;
         if (mCursor != null && !mCursor.moveToFirst()) {
-            Log.e("Logging error", "Error reading item detail cursor");
             mCursor.close();
             mCursor = null;
         }
@@ -117,19 +111,17 @@ public class ArticleDetailActivity extends AppCompatActivity
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursor = null;
-
         bindViews();
     }
 
     private void bindViews() {
         TextView titleView = (TextView) findViewById(R.id.article_title);
         TextView bylineView = (TextView) findViewById(R.id.article_byline);
-        bylineView.setMovementMethod(new LinkMovementMethod());
-        TextView bodyView = (TextView) findViewById(R.id.article_body);
 
         if (mCursor != null) {
-
             titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
+            bodyData = mCursor.getString(ArticleLoader.Query.BODY);
+
             Date publishedDate = parsePublishedDate();
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
                 bylineView.setText(Html.fromHtml(
@@ -150,9 +142,6 @@ public class ArticleDetailActivity extends AppCompatActivity
 
             }
 
-            bodyView.setText(mCursor.getString(ArticleLoader.Query.BODY));
-
-            Log.d("photo", mCursor.getString(ArticleLoader.Query.PHOTO_URL));
             ImageLoaderHelper.getInstance(this).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
