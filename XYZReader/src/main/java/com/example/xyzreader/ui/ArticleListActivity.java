@@ -134,6 +134,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Intent viewDetails = new Intent(ArticleListActivity.this, ArticleDetailActivity.class);
                     Bundle bundle = new Bundle();
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                         bundle = ActivityOptions
@@ -143,8 +144,9 @@ public class ArticleListActivity extends AppCompatActivity implements
                                         vh.thumbnailView.getTransitionName()).toBundle();
                         //startActivity(new Intent(ArticleListActivity.this, TestActivity.class), bundle);
                     }
-                    bundle.putLong(ITEM_ID,getItemId(vh.getAdapterPosition()));
-                    startActivity(new Intent(ArticleListActivity.this, ArticleDetailActivity.class), bundle);
+                    Log.d("item clicked", "" + getItemId(vh.getAdapterPosition()));
+                    viewDetails.putExtra(ITEM_ID, getItemId(vh.getAdapterPosition()));
+                    startActivity(viewDetails,bundle);
 
                     /*startActivity(new Intent(Intent.ACTION_VIEW,
                             ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));*/
