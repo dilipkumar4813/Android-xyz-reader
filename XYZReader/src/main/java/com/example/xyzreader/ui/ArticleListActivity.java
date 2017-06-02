@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
-import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
 
 import java.text.ParseException;
@@ -143,13 +142,9 @@ public class ArticleListActivity extends AppCompatActivity implements
                                 .makeSceneTransitionAnimation(ArticleListActivity.this,
                                         vh.thumbnailView,
                                         vh.thumbnailView.getTransitionName()).toBundle();
-                        //startActivity(new Intent(ArticleListActivity.this, TestActivity.class), bundle);
                     }
 
                     viewDetails.putExtra(ITEM_ID, getItemId(vh.getAdapterPosition()));
-                    mCursor.moveToPosition(vh.getAdapterPosition());
-                    viewDetails.putExtra("title", mCursor.getString(ArticleLoader.Query.TITLE));
-                    viewDetails.putExtra("imageDetails", mCursor.getString(ArticleLoader.Query.PHOTO_URL));
                     startActivity(viewDetails, bundle);
 
                     /*startActivity(new Intent(Intent.ACTION_VIEW,

@@ -84,9 +84,11 @@ public class ArticleDetailActivity extends AppCompatActivity
         });
 
         final TextView bodyView = (TextView) findViewById(R.id.article_body);
+        final TextView loadingLayout = (TextView) findViewById(R.id.loading_text);
         bodyView.postDelayed(new Runnable() {
             @Override
             public void run() {
+                loadingLayout.setVisibility(View.GONE);
                 bodyView.setText(bodyData);
             }
         }, 700);
