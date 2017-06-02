@@ -136,10 +136,14 @@ public class ArticleListActivity extends AppCompatActivity implements
                 public void onClick(View view) {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                         Bundle bundle = ActivityOptions
-                                .makeSceneTransitionAnimation(ArticleListActivity.this).toBundle();
+                                .makeSceneTransitionAnimation(ArticleListActivity.this)
+                                .makeSceneTransitionAnimation(ArticleListActivity.this,
+                                        vh.thumbnailView,
+                                        vh.thumbnailView.getTransitionName()).toBundle();
+                        startActivity(new Intent(ArticleListActivity.this, TestActivity.class), bundle);
                     }
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+                    /*startActivity(new Intent(Intent.ACTION_VIEW,
+                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));*/
                 }
             });
             return vh;

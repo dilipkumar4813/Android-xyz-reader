@@ -9,5 +9,6 @@
 
     <string name="up">Up</string>
     <string name="by">by</string>
+    <string name="title_activity_test">TestActivity</string>
 
 </resources>
