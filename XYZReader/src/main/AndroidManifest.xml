@@ -24,13 +24,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.ArticleDetailActivity"
+            android:name=".ui.ArticleDetailActivityReference"
             android:parentActivityName=".ui.ArticleListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="vnd.android.cursor.item/vnd.com.example.xyzreader.items" />
             </intent-filter>
 
@@ -49,7 +47,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.TestActivity"
+            android:name=".ui.ArticleDetailActivity"
             android:label="@string/title_activity_test"
             android:theme="@style/Theme.Bacon"></activity>
     </application>

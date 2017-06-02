@@ -37,7 +37,7 @@ import com.example.xyzreader.data.ArticleLoader;
 /**
  * A fragment representing a single Article detail screen. This fragment is
  * either contained in a {@link ArticleListActivity} in two-pane mode (on
- * tablets) or a {@link ArticleDetailActivity} on handsets.
+ * tablets) or a {@link ArticleDetailActivityReference} on handsets.
  */
 public class ArticleDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -96,8 +96,8 @@ public class ArticleDetailFragment extends Fragment implements
         setHasOptionsMenu(true);
     }
 
-    public ArticleDetailActivity getActivityCast() {
-        return (ArticleDetailActivity) getActivity();
+    public ArticleDetailActivityReference getActivityCast() {
+        return (ArticleDetailActivityReference) getActivity();
     }
 
     @Override

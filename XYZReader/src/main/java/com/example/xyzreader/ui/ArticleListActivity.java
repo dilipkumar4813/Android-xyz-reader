@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
-import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
 
 import java.text.ParseException;
@@ -32,13 +31,14 @@ import java.util.GregorianCalendar;
 /**
  * An activity representing a list of Articles. This activity has different presentations for
  * handset and tablet-size devices. On handsets, the activity presents a list of items, which when
- * touched, lead to a {@link ArticleDetailActivity} representing item details. On tablets, the
+ * touched, lead to a {@link ArticleDetailActivityReference} representing item details. On tablets, the
  * activity presents a grid of items as cards.
  */
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = ArticleListActivity.class.toString();
+    public static final String ITEM_ID = "item_id";
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
 
@@ -134,14 +134,18 @@ public class ArticleListActivity extends AppCompatActivity implements
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Bundle bundle = new Bundle();
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                        Bundle bundle = ActivityOptions
+                        bundle = ActivityOptions
                                 .makeSceneTransitionAnimation(ArticleListActivity.this)
                                 .makeSceneTransitionAnimation(ArticleListActivity.this,
                                         vh.thumbnailView,
                                         vh.thumbnailView.getTransitionName()).toBundle();
-                        startActivity(new Intent(ArticleListActivity.this, TestActivity.class), bundle);
+                        //startActivity(new Intent(ArticleListActivity.this, TestActivity.class), bundle);
                     }
+                    bundle.putLong(ITEM_ID,getItemId(vh.getAdapterPosition()));
+                    startActivity(new Intent(ArticleListActivity.this, ArticleDetailActivity.class), bundle);
+
                     /*startActivity(new Intent(Intent.ACTION_VIEW,
                             ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));*/
                 }
