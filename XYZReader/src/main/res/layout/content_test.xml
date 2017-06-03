@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_marginTop="140dp"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.xyzreader.ui.ArticleDetailActivity"
@@ -12,15 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/iv_recipe_image"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@drawable/food_banner"
-            android:contentDescription="@string/app_name"
-            android:scaleType="centerCrop"
-            android:transitionName="scollImage" />
 
         <LinearLayout
             android:id="@+id/meta_bar"
