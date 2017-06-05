@@ -38,7 +38,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = ArticleListActivity.class.toString();
-    public static final String ITEM_ID = "item_id";
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
 
@@ -144,7 +143,12 @@ public class ArticleListActivity extends AppCompatActivity implements
                                         vh.thumbnailView.getTransitionName()).toBundle();
                     }
 
-                    viewDetails.putExtra(ITEM_ID, getItemId(vh.getAdapterPosition()));
+                    viewDetails.putExtra(ArticleDetailActivity.ITEM_ID, getItemId(vh.getAdapterPosition()));
+
+                    mCursor.moveToPosition(vh.getAdapterPosition());
+                    String title = mCursor.getString(ArticleLoader.Query.TITLE);
+                    viewDetails.putExtra(ArticleDetailActivity.ITEM_NAME, title);
+
                     startActivity(viewDetails, bundle);
 
                     /*startActivity(new Intent(Intent.ACTION_VIEW,

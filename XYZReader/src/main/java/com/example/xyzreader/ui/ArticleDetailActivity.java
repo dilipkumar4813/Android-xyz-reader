@@ -44,6 +44,9 @@ public class ArticleDetailActivity extends AppCompatActivity
     private SimpleDateFormat outputFormat = new SimpleDateFormat();
     private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2, 1, 1);
 
+    public static final String ITEM_ID = "itemId";
+    public static final String ITEM_NAME = "itemName";
+
     String bodyData;
 
     @Override
@@ -64,8 +67,9 @@ public class ArticleDetailActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             if (getIntent().getExtras() != null) {
-                mStartId = getIntent().getLongExtra(ArticleListActivity.ITEM_ID, 0);
-                String title = getIntent().getStringExtra("title");
+                mStartId = getIntent().getLongExtra(ITEM_ID, 0);
+
+                String title = getIntent().getStringExtra(ITEM_NAME);
                 String defaultTitle = getString(R.string.app_name);
 
                 collapsingToolbarLayout.setTitle(defaultTitle);
