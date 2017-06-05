@@ -52,7 +52,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_detail);
 
         TextView titleView = (TextView) findViewById(R.id.article_title);
         mToolbarImage = (ImageView) findViewById(R.id.iv_article_image);

@@ -20,7 +20,7 @@
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:transitionName="scollImage"
+            android:transitionName="@string/shared_element_transistion_key"
             android:background="@color/dividerAndPlaceholder"
             android:scaleType="centerCrop" />
 

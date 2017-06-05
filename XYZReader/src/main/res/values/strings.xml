@@ -9,6 +9,9 @@
 
     <string name="up">Up</string>
     <string name="by">by</string>
-    <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_details">Article Details</string>
+
+    <string name="shared_element_transistion_key" translatable="false">articledetail</string>
+    <string name="loading_text">Connecting with satellites\nLoading Article...</string>
 
 </resources>
