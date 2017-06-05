@@ -17,6 +17,7 @@ import android.transition.Slide;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
@@ -26,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
+import com.example.xyzreader.data.UpdaterService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,7 +35,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class ArticleDetailActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor>, SimpleGestureFilter.SimpleGestureListener {
+
+    private SimpleGestureFilter detector;
 
     private Cursor mCursor;
     private long mStartId;
@@ -47,7 +51,8 @@ public class ArticleDetailActivity extends AppCompatActivity
     public static final String ITEM_ID = "itemId";
     public static final String ITEM_NAME = "itemName";
 
-    String bodyData;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private String mBodyText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +63,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         mToolbarImage = (ImageView) findViewById(R.id.iv_article_image);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
@@ -72,12 +77,12 @@ public class ArticleDetailActivity extends AppCompatActivity
                 String title = getIntent().getStringExtra(ITEM_NAME);
                 String defaultTitle = getString(R.string.app_name);
 
-                collapsingToolbarLayout.setTitle(defaultTitle);
+                mCollapsingToolbarLayout.setTitle(defaultTitle);
                 titleView.setText(defaultTitle);
 
                 if (title != null) {
                     if (!title.isEmpty()) {
-                        collapsingToolbarLayout.setTitle(title);
+                        mCollapsingToolbarLayout.setTitle(title);
                         titleView.setText(title);
                     }
                 }
@@ -112,14 +117,16 @@ public class ArticleDetailActivity extends AppCompatActivity
             @Override
             public void run() {
                 loadingLayout.setVisibility(View.GONE);
-                bodyView.setText(bodyData);
+                bodyView.setText(mBodyText);
             }
         }, 700);
+
+        detector = new SimpleGestureFilter(this, this);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 break;
@@ -155,8 +162,12 @@ public class ArticleDetailActivity extends AppCompatActivity
         TextView bylineView = (TextView) findViewById(R.id.article_byline);
 
         if (mCursor != null) {
-            titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
-            bodyData = mCursor.getString(ArticleLoader.Query.BODY);
+            String articleTitle = mCursor.getString(ArticleLoader.Query.TITLE);
+
+            titleView.setText(articleTitle);
+            mCollapsingToolbarLayout.setTitle(articleTitle);
+
+            mBodyText = mCursor.getString(ArticleLoader.Query.BODY);
 
             Date publishedDate = parsePublishedDate();
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
@@ -205,5 +216,46 @@ public class ArticleDetailActivity extends AppCompatActivity
             Log.i("information", "passing today's date");
             return new Date();
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent me) {
+        this.detector.onTouchEvent(me);
+        return super.dispatchTouchEvent(me);
+    }
+
+    @Override
+    public void onSwipe(int direction) {
+        switch (direction) {
+            case SimpleGestureFilter.SWIPE_RIGHT:
+                changeActivity(false);
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT:
+                changeActivity(true);
+                break;
+        }
+    }
+
+    private void changeActivity(boolean next) {
+        int nextIndex = ArticleListActivity.ids.indexOf(mStartId);
+
+        if (next) {
+            if (nextIndex == ArticleListActivity.ids.size() - 1) {
+                nextIndex = -1;
+            }
+            nextIndex++;
+        } else {
+            if (nextIndex == 0) {
+                nextIndex = ArticleListActivity.ids.size();
+            }
+            nextIndex--;
+        }
+
+        Long changeId = ArticleListActivity.ids.get(nextIndex);
+
+        Intent viewDetails = new Intent(ArticleDetailActivity.this, ArticleDetailActivity.class);
+        viewDetails.putExtra(ArticleDetailActivity.ITEM_ID, changeId);
+        startActivity(viewDetails);
+        this.finish();
     }
 }

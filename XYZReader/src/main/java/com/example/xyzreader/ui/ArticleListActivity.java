@@ -25,6 +25,7 @@ import com.example.xyzreader.data.UpdaterService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -44,10 +45,14 @@ public class ArticleListActivity extends AppCompatActivity implements
     // Most time functions can only handle 1902 - 2037
     private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2, 1, 1);
 
+    public static ArrayList<Long> ids;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
+
+        ids = new ArrayList<>();
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
@@ -99,6 +104,13 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        ids.clear();
+        if(cursor.moveToFirst()){
+            do{
+                ids.add(cursor.getLong(ArticleLoader.Query._ID));
+
+            }while(cursor.moveToNext());
+        }
         Adapter adapter = new Adapter(cursor);
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
@@ -144,15 +156,11 @@ public class ArticleListActivity extends AppCompatActivity implements
                     }
 
                     viewDetails.putExtra(ArticleDetailActivity.ITEM_ID, getItemId(vh.getAdapterPosition()));
-
                     mCursor.moveToPosition(vh.getAdapterPosition());
                     String title = mCursor.getString(ArticleLoader.Query.TITLE);
                     viewDetails.putExtra(ArticleDetailActivity.ITEM_NAME, title);
 
                     startActivity(viewDetails, bundle);
-
-                    /*startActivity(new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));*/
                 }
             });
             return vh;
