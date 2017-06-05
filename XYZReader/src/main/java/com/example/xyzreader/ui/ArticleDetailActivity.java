@@ -6,6 +6,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import android.text.format.DateUtils;
 import android.transition.Slide;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
@@ -50,12 +52,32 @@ public class ArticleDetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_test);
 
         TextView titleView = (TextView) findViewById(R.id.article_title);
-        mToolbarImage = (ImageView) findViewById(R.id.iv_recipe_image);
+        mToolbarImage = (ImageView) findViewById(R.id.iv_article_image);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         if (savedInstanceState == null) {
             if (getIntent().getExtras() != null) {
                 mStartId = getIntent().getLongExtra(ArticleListActivity.ITEM_ID, 0);
-                titleView.setText(getIntent().getStringExtra("title"));
+                String title = getIntent().getStringExtra("title");
+                String defaultTitle = getString(R.string.app_name);
+
+                collapsingToolbarLayout.setTitle(defaultTitle);
+                titleView.setText(defaultTitle);
+
+                if (title != null) {
+                    if (!title.isEmpty()) {
+                        collapsingToolbarLayout.setTitle(title);
+                        titleView.setText(title);
+                    }
+                }
+
             }
         }
 
@@ -67,13 +89,6 @@ public class ArticleDetailActivity extends AppCompatActivity
             slide.addTarget(R.id.meta_bar);
             slide.setInterpolator(new DecelerateInterpolator());
             getWindow().setEnterTransition(slide);
-        }
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -96,6 +111,17 @@ public class ArticleDetailActivity extends AppCompatActivity
                 bodyView.setText(bodyData);
             }
         }, 700);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+
+        return true;
     }
 
     @Override
