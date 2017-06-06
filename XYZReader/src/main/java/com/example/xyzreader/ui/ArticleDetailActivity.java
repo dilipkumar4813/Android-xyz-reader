@@ -27,7 +27,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
-import com.example.xyzreader.data.UpdaterService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,6 +49,7 @@ public class ArticleDetailActivity extends AppCompatActivity
 
     public static final String ITEM_ID = "itemId";
     public static final String ITEM_NAME = "itemName";
+    public static final String SLIDE = "slide";
 
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private String mBodyText;
@@ -85,8 +85,14 @@ public class ArticleDetailActivity extends AppCompatActivity
                         mCollapsingToolbarLayout.setTitle(title);
                         titleView.setText(title);
                     }
-                }
+                } else {
+                    if (getIntent().getBooleanExtra(SLIDE, false)) {
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+                    } else {
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
+                    }
 
+                }
             }
         }
 
@@ -238,12 +244,14 @@ public class ArticleDetailActivity extends AppCompatActivity
 
     private void changeActivity(boolean next) {
         int nextIndex = ArticleListActivity.ids.indexOf(mStartId);
+        boolean slide = false;
 
         if (next) {
             if (nextIndex == ArticleListActivity.ids.size() - 1) {
                 nextIndex = -1;
             }
             nextIndex++;
+            slide = true;
         } else {
             if (nextIndex == 0) {
                 nextIndex = ArticleListActivity.ids.size();
@@ -255,6 +263,7 @@ public class ArticleDetailActivity extends AppCompatActivity
 
         Intent viewDetails = new Intent(ArticleDetailActivity.this, ArticleDetailActivity.class);
         viewDetails.putExtra(ArticleDetailActivity.ITEM_ID, changeId);
+        viewDetails.putExtra(SLIDE, slide);
         startActivity(viewDetails);
         this.finish();
     }
