@@ -2,4 +2,5 @@
 <resources>
     <integer name="card_subtitle_lines">2</integer>
     <integer name="card_title_lines">4</integer>
+    <integer name="list_column_count">2</integer>
 </resources>
