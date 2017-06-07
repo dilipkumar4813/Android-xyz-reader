@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="card_subtitle_lines">2</integer>
+    <integer name="card_title_lines">4</integer>
+</resources>
