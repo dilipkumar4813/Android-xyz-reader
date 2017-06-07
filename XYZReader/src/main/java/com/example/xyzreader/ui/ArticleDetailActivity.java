@@ -40,7 +40,8 @@ public class ArticleDetailActivity extends AppCompatActivity
     private SimpleGestureFilter detector;
 
     private Cursor mCursor;
-    private long mStartId;
+    private long mSelectedId;
+    private String mTitle;
 
     ImageView mToolbarImage;
 
@@ -73,18 +74,18 @@ public class ArticleDetailActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             if (getIntent().getExtras() != null) {
-                mStartId = getIntent().getLongExtra(ITEM_ID, 0);
+                mSelectedId = getIntent().getLongExtra(ITEM_ID, 0);
 
-                String title = getIntent().getStringExtra(ITEM_NAME);
+                mTitle = getIntent().getStringExtra(ITEM_NAME);
                 String defaultTitle = getString(R.string.app_name);
 
                 mCollapsingToolbarLayout.setTitle(defaultTitle);
                 titleView.setText(defaultTitle);
 
-                if (title != null) {
-                    if (!title.isEmpty()) {
-                        mCollapsingToolbarLayout.setTitle(title);
-                        titleView.setText(title);
+                if (mTitle != null) {
+                    if (!mTitle.isEmpty()) {
+                        mCollapsingToolbarLayout.setTitle(mTitle);
+                        titleView.setText(mTitle);
                     }
                 } else {
                     if (getIntent().getBooleanExtra(SLIDE, false)) {
@@ -95,6 +96,9 @@ public class ArticleDetailActivity extends AppCompatActivity
 
                 }
             }
+        } else {
+            mSelectedId = savedInstanceState.getLong(ITEM_ID, 0);
+            mTitle = savedInstanceState.getString(ITEM_NAME);
         }
 
         getLoaderManager().initLoader(0, null, this);
@@ -126,9 +130,17 @@ public class ArticleDetailActivity extends AppCompatActivity
                 loadingLayout.setVisibility(View.GONE);
                 bodyView.setText(mBodyText);
             }
-        }, 700);
+        }, 650);
 
         detector = new SimpleGestureFilter(this, this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putLong(ITEM_ID, mSelectedId);
+        outState.putString(ITEM_NAME, mTitle);
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -144,7 +156,7 @@ public class ArticleDetailActivity extends AppCompatActivity
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return ArticleLoader.newInstanceForItemId(this, mStartId);
+        return ArticleLoader.newInstanceForItemId(this, mSelectedId);
     }
 
     @Override
@@ -204,7 +216,6 @@ public class ArticleDetailActivity extends AppCompatActivity
                             if (bitmap != null) {
                                 BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
                                 mToolbarImage.setBackground(bitmapDrawable);
-                                mToolbarImage.setImageBitmap(imageContainer.getBitmap());
                             }
                         }
 
@@ -246,7 +257,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     }
 
     private void changeActivity(boolean next) {
-        int nextIndex = ArticleListActivity.ids.indexOf(mStartId);
+        int nextIndex = ArticleListActivity.ids.indexOf(mSelectedId);
         boolean slide = false;
 
         if (next) {
