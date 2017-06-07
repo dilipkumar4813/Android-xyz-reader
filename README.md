@@ -18,7 +18,7 @@ An RSS feed Android application used for implementing material design.
 ![Article Detail](https://github.com/dilipkumar4813/Android-xyz-reader/blob/master/screenshots/Screenshot_2017-06-07-11-52-11.png)
 
 ## Libraries
-[RecyclerView](https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html)
-[CardView](https://developer.android.com/reference/android/support/v7/widget/CardView.html)
-[Design](https://developer.android.com/training/material/design-library.html)
-[Volley](https://developer.android.com/training/volley/index.html)
+* [RecyclerView](https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html)
+* [CardView](https://developer.android.com/reference/android/support/v7/widget/CardView.html)
+* [Design](https://developer.android.com/training/material/design-library.html)
+* [Volley](https://developer.android.com/training/volley/index.html)
