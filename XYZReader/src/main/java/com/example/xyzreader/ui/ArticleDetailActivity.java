@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -201,6 +202,8 @@ public class ArticleDetailActivity extends AppCompatActivity
                         public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
                             Bitmap bitmap = imageContainer.getBitmap();
                             if (bitmap != null) {
+                                BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
+                                mToolbarImage.setBackground(bitmapDrawable);
                                 mToolbarImage.setImageBitmap(imageContainer.getBitmap());
                             }
                         }
