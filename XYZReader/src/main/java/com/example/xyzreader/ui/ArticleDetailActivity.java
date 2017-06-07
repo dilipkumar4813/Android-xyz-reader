@@ -128,7 +128,7 @@ public class ArticleDetailActivity extends AppCompatActivity
             @Override
             public void run() {
                 loadingLayout.setVisibility(View.GONE);
-                bodyView.setText(mBodyText);
+                bodyView.setText(Html.fromHtml(mBodyText));
             }
         }, 650);
 
@@ -214,8 +214,7 @@ public class ArticleDetailActivity extends AppCompatActivity
                         public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
                             Bitmap bitmap = imageContainer.getBitmap();
                             if (bitmap != null) {
-                                BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
-                                mToolbarImage.setBackground(bitmapDrawable);
+                                mToolbarImage.setImageBitmap(bitmap);
                             }
                         }
 
