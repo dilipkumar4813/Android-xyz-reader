@@ -11,6 +11,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
@@ -22,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -44,6 +46,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     private String mTitle;
 
     ImageView mToolbarImage;
+    LinearLayout mMetaLayout;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     private SimpleDateFormat outputFormat = new SimpleDateFormat();
@@ -63,6 +66,8 @@ public class ArticleDetailActivity extends AppCompatActivity
 
         TextView titleView = (TextView) findViewById(R.id.article_title);
         mToolbarImage = (ImageView) findViewById(R.id.iv_article_image);
+
+        mMetaLayout = (LinearLayout) findViewById(R.id.ll_meta_information);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -215,6 +220,10 @@ public class ArticleDetailActivity extends AppCompatActivity
                             Bitmap bitmap = imageContainer.getBitmap();
                             if (bitmap != null) {
                                 mToolbarImage.setImageBitmap(bitmap);
+
+                                Palette palette = Palette.from(bitmap).generate();
+                                int mutedColor = palette.getDarkMutedColor(0xFF333333);
+                                mMetaLayout.setBackgroundColor(mutedColor);
                             }
                         }
 
